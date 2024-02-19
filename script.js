@@ -147,7 +147,7 @@ function displayTeams(teams) {
   teams.forEach((team, index) => {
     const teamDiv = document.createElement("div");
     teamDiv.classList.add("team");
-    teamDiv.innerHTML = `<div>Team ${index + 1}:</div>`;
+    teamDiv.innerHTML = "";
     team.forEach((player) => {
       teamDiv.innerHTML += `<div>${player.name} (${player.rank})</div>`;
     });
@@ -175,6 +175,41 @@ document.getElementById("randomizeButton").addEventListener("click", () => {
   sortTeamsByRank(pairedPlayers);
   // Display paired players
   displayTeams(pairedPlayers);
+  // Shows download button
+  document.getElementById("downloadTeamsButton").style.display = "block";
 });
 
 updatePlayerCount();
+
+// Function to generate text content of teams
+function generateTeamsText(teamsContainer) {
+  let teamsText = '';
+  const teams = Array.from(teamsContainer.children); // Convert to array
+  teams.forEach((team, index) => {
+    const teamPlayers = Array.from(team.children).map(player => player.textContent.split(' (')[0]); // Extract player names
+    const teamText = teamPlayers.join(' and '); // Join player names with ' and ' between them
+    if (index !== 0) {
+      teamsText += '\n'; // Add newline if not the first team
+    }
+    teamsText += teamText;
+  });
+  return teamsText;
+}
+
+// Function to download teams as a .txt file
+function downloadTeamsTxt(teamsContainer) {
+  const teamsText = generateTeamsText(teamsContainer);
+  const element = document.createElement('a');
+  const file = new Blob([teamsText], {type: 'text/plain'});
+  element.href = URL.createObjectURL(file);
+  element.download = 'teams.txt';
+  document.body.appendChild(element); // Required for Firefox
+  element.click();
+  document.body.removeChild(element);
+}
+
+// Event listener for downloading teams as .txt file
+document.getElementById('downloadTeamsButton').addEventListener('click', () => {
+  const teamsContainer = document.getElementById('teamsContainer');
+  downloadTeamsTxt(teamsContainer);
+});
