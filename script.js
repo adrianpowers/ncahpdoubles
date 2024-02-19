@@ -191,7 +191,7 @@ document.getElementById("randomizeButton").addEventListener("click", () => {
   addPlaceholderPlayer(players);
 
   let pairedPlayers;
-  if (randomizationMethod === "ranked") {
+  if (randomizationMethod === "split") {
     // Split players into high rank and low rank groups
     const { highRank, lowRank } = splitPlayers(players);
     // Pair players from high rank and low rank groups randomly
