@@ -56,15 +56,47 @@ function addPlayer() {
 }
 
 // Function to display the list of players
+// Function to display the list of players
 function displayPlayers() {
   const currentPlayersList = document.getElementById("currentPlayers");
   currentPlayersList.innerHTML = ""; // Clear previous list
 
-  players.forEach((player) => {
+  players.forEach((player, index) => {
     const playerItem = document.createElement("li");
-    playerItem.textContent = `${player.name} (${player.rank})`;
+
+    // Create span for player name and rank
+    const playerSpan = document.createElement("span");
+    playerSpan.textContent = `${player.name} (${player.rank})`;
+
+    // Add delete button
+    const deleteButton = document.createElement("button");
+    deleteButton.textContent = "Delete";
+    deleteButton.addEventListener("click", () => deletePlayer(index));
+
+    // Style player span and delete button to be displayed inline
+    deleteButton.style.display = "inline";
+    deleteButton.style.marginTop = "0px"; 
+    playerSpan.style.display = "inline";
+    playerSpan.style.marginRight = "8px"; 
+    
+    // Append player span and delete button to player item
+    playerItem.appendChild(playerSpan);
+    playerItem.appendChild(deleteButton);
+    
+    playerItem.style.marginTop = "0 px";
+
+    // Append player item to current players list
     currentPlayersList.appendChild(playerItem);
   });
+}
+
+// Function to delete a player
+function deletePlayer(index) {
+  players.splice(index, 1);
+  // Display the updated list of players
+  displayPlayers();
+  // Update player count
+  updatePlayerCount();
 }
 
 // Function to update player count

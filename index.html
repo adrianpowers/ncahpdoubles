@@ -1,30 +1,43 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>NCAHP Doubles Team Randomizer</title>
-  <link rel="stylesheet" href="styles.css">
-</head>
-<body>
-  <div class="container">
-    <h1>NCAHP Doubles Team Randomizer</h1>
-    <h3>
-      Input players with their name and rank. <br><br> 
-      If a player is UNRANKED, leave the rank box blank - this will shove them to the bottom of the list.<br><br> 
-      If there is an odd number of players, a placeholder will be automatically added in and paired with someone random in the top half of players. (We'll deal with 'em later.)<br><br>
-      ONE PUCK!
-    </h3>
-    <div id="inputContainer">
-      <input type="text" id="playerName" placeholder="Player Name">
-      <input type="number" id="playerRank" placeholder="Player Rank">
-      <button id="addPlayerButton">Add Player</button>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>NCAHP Doubles Team Randomizer</title>
+    <link rel="stylesheet" href="styles.css" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Raleway:ital,wght@0,100..900;1,100..900&display=swap"
+      rel="stylesheet"
+    />
+  </head>
+  <body>
+    <div class="container">
+      <h1>NCAHP Doubles Team Randomizer</h1>
+      <h3>
+        Input players with their name and rank. <br /><br />
+        If a player is UNRANKED, leave the rank box BLANK - this will shove them
+        to the bottom of the list. (DO NOT PUT THEIR RANK AS 0, please. This
+        makes them better than Joey.)<br /><br />
+        If there is an odd number of players, a placeholder will be
+        automatically added in and paired with someone random in the top half of
+        players. (We'll deal with 'em later.)<br /><br />
+        If someone decides to drop after randomization, but before the tournament
+        starts, make sure to check the bottom of the players list and delete any
+        placeholders, then randomize again if need be.<br /><br />
+        ONE PUCK!
+      </h3>
+      <div id="inputContainer">
+        <input type="text" id="playerName" placeholder="Player Name" />
+        <input type="number" id="playerRank" placeholder="Player Rank" />
+        <button id="addPlayerButton">Add Player</button>
+      </div>
+      <h2>Current Players <span id="playerCount">(0)</span>:</h2>
+      <ul id="currentPlayers"></ul>
+      <button id="randomizeButton">Randomize Teams</button>
+      <div id="teamsContainer"></div>
     </div>
-    <h2>Current Players <span id="playerCount">(0)</span>:</h2> <!-- Added player count -->
-    <ul id="currentPlayers"></ul>
-    <button id="randomizeButton">Randomize Teams</button>
-    <div id="teamsContainer"></div>
-  </div>
-  <script src="script.js"></script>
-</body>
+    <script src="script.js"></script>
+  </body>
 </html>

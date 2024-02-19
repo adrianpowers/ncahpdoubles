@@ -1,5 +1,5 @@
 body {
-    font-family: Arial, sans-serif;
+    font-family: "Raleway", sans-serif;
     margin: 0;
     padding: 0;
     background-color: #437BBF;
@@ -17,21 +17,24 @@ body {
   h1 {
     text-align: center;
     color: #CD4438;
+    font-size: 40px;
+    font-weight: bold;
   }
   
   button {
     display: block;
     margin: 20px auto;
-    padding: 10px 20px;
+    padding: 8px 20px;
     background-color: #CD4438;
     color: #fff;
+    font-family: "Raleway", sans-serif;
     border: none;
     border-radius: 4px;
     cursor: pointer;
   }
   
   button:hover {
-    background-color: #0056b3;
+    background-color: #8b2a21;
   }
   
   .team {
@@ -49,3 +52,8 @@ body {
     margin-right: 10px;
   }
   
+  #currentPlayers li {
+    margin-bottom: -15px;
+    font-weight: bold;
+    font-size: 20px;
+  }
