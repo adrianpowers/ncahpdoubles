@@ -28,16 +28,24 @@
         placeholders, then randomize again if need be.<br /><br />
         ONE PUCK!
       </h3>
-      <div id="inputContainer" style="display: flex;">
-        <input type="text" id="playerName" placeholder="Player Name">
-        <input type="number" id="playerRank" placeholder="Player Rank">
-        <button id="addPlayerButton">Add Player</button>
+      <div id="container">
+        <div id="inputContainer">
+          <input type="text" id="playerName" placeholder="Player Name">
+          <input type="number" id="playerRank" placeholder="Player Rank">
+          <button id="addPlayerButton">Add Player</button>
+        </div>
+        <div id="randomizationMethod">
+          <label><input type="radio" name="randomization" value="ranked" checked> Ranked Random</label>
+          <label><input type="radio" name="randomization" value="inverse"> Inverse Seeded</label>
+          <label><input type="radio" name="randomization" value="true"> True Random</label>
+          <!-- Add more radio buttons for other randomization methods -->
+        </div>
+        <h2>Current Players <span id="playerCount">(0)</span>:</h2>
+        <ul id="currentPlayers"></ul>
+        <button id="randomizeButton">Randomize Teams</button>
+        <div id="teamsContainer"></div>
+        <button id="downloadTeamsButton" style="display: none;">Download Teams</button>
       </div>
-      <h2>Current Players <span id="playerCount">(0)</span>:</h2>
-      <ul id="currentPlayers"></ul>
-      <button id="randomizeButton">Randomize Teams</button>
-      <button id="downloadTeamsButton" style="display: none;">Download List of Teams</button>
-      <div id="teamsContainer"></div>
     </div>
     <script src="script.js"></script>
   </body>

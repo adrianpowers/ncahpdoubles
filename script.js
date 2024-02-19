@@ -1,6 +1,17 @@
 // JavaScript code for player team randomizer
-
 let players = [];
+
+// Function to select the randomization method
+function getSelectedRandomizationMethod() {
+  const radioButtons = document.getElementsByName("randomization");
+  let selectedMethod = "shuffle"; // Default method
+  radioButtons.forEach((button) => {
+    if (button.checked) {
+      selectedMethod = button.value;
+    }
+  });
+  return selectedMethod;
+}
 
 // Function to sort players by rank, with NaN rank players placed at the bottom
 function sortPlayersByRank(players) {
@@ -75,14 +86,14 @@ function displayPlayers() {
 
     // Style player span and delete button to be displayed inline
     deleteButton.style.display = "inline";
-    deleteButton.style.marginTop = "0px"; 
+    deleteButton.style.marginTop = "0px";
     playerSpan.style.display = "inline";
-    playerSpan.style.marginRight = "8px"; 
-    
+    playerSpan.style.marginRight = "8px";
+
     // Append player span and delete button to player item
     playerItem.appendChild(playerSpan);
     playerItem.appendChild(deleteButton);
-    
+
     playerItem.style.marginTop = "0 px";
 
     // Append player item to current players list
@@ -120,6 +131,15 @@ function splitPlayers(players) {
   const halfwayIndex = Math.ceil(sortedPlayers.length / 2);
   const highRank = sortedPlayers.slice(0, halfwayIndex);
   const lowRank = sortedPlayers.slice(halfwayIndex);
+  return { highRank, lowRank };
+}
+
+function inverseSplitPlayers(players) {
+  const sortedPlayers = sortPlayersByRank(players);
+  const halfwayIndex = Math.ceil(sortedPlayers.length / 2);
+  const highRank = sortedPlayers.slice(0, halfwayIndex);
+  let lowRank = sortedPlayers.slice(halfwayIndex);
+  lowRank = lowRank.reverse();
   return { highRank, lowRank };
 }
 
@@ -163,33 +183,71 @@ function sortTeamsByRank(teams) {
 // Event listener for adding a player
 document.getElementById("addPlayerButton").addEventListener("click", addPlayer);
 
-// Event listener for randomizing teams
 document.getElementById("randomizeButton").addEventListener("click", () => {
+  // Get selected randomization method
+  const randomizationMethod = getSelectedRandomizationMethod();
+
   // Add a placeholder player if the number of players is odd
   addPlaceholderPlayer(players);
-  // Split players into high rank and low rank groups
-  const { highRank, lowRank } = splitPlayers(players);
-  // Pair players from high rank and low rank groups randomly
-  const pairedPlayers = pairPlayers(shuffle(highRank), shuffle(lowRank));
-  // Sort teams by the rank of the first player
-  sortTeamsByRank(pairedPlayers);
+
+  let pairedPlayers;
+  if (randomizationMethod === "ranked") {
+    // Split players into high rank and low rank groups
+    const { highRank, lowRank } = splitPlayers(players);
+    // Pair players from high rank and low rank groups randomly
+    pairedPlayers = pairPlayers(highRank, shuffle(lowRank));
+  } else if (randomizationMethod === "inverse") {
+    // Split players into high rank and low rank groups then reverse the low ranked group
+    const { highRank, lowRank } = inverseSplitPlayers(players);
+    // Pair players from high rank and low rank groups by sorting
+    pairedPlayers = pairPlayers(highRank, lowRank);
+  } else if (randomizationMethod === "true") {
+    // Shuffle the entire list of players
+    const shuffledPlayers = shuffle(players);
+    // Split the shuffled list into two halves
+    const halfwayIndex = Math.ceil(shuffledPlayers.length / 2);
+    const firstHalf = shuffledPlayers.slice(0, halfwayIndex);
+    const secondHalf = shuffledPlayers.slice(halfwayIndex);
+    // Pair players from the first half with players from the second half
+    pairedPlayers = pairPlayers(firstHalf, secondHalf);
+  }
   // Display paired players
   displayTeams(pairedPlayers);
-  // Shows download button
-  document.getElementById("downloadTeamsButton").style.display = "block";
+  // Show download button
+  document.getElementById("downloadTeamsButton").style.display = "inline-block";
 });
+
+// Function to update the text of the randomize button based on the selected randomization method
+function updateRandomizeButtonText() {
+  const randomizationMethod = getSelectedRandomizationMethod();
+  const randomizeButton = document.getElementById("randomizeButton");
+  if (randomizationMethod === "inverse") {
+    randomizeButton.textContent = "Determine Teams";
+  } else {
+    randomizeButton.textContent = "Randomize Teams";
+  }
+}
+
+// Event listener for radio buttons change
+document
+  .querySelectorAll('input[type="radio"][name="randomization"]')
+  .forEach((radio) => {
+    radio.addEventListener("change", updateRandomizeButtonText);
+  });
 
 updatePlayerCount();
 
 // Function to generate text content of teams
 function generateTeamsText(teamsContainer) {
-  let teamsText = '';
+  let teamsText = "";
   const teams = Array.from(teamsContainer.children); // Convert to array
   teams.forEach((team, index) => {
-    const teamPlayers = Array.from(team.children).map(player => player.textContent.split(' (')[0]); // Extract player names
-    const teamText = teamPlayers.join(' and '); // Join player names with ' and ' between them
+    const teamPlayers = Array.from(team.children).map(
+      (player) => player.textContent.split(" (")[0]
+    ); // Extract player names
+    const teamText = teamPlayers.join(" and "); // Join player names with ' and ' between them
     if (index !== 0) {
-      teamsText += '\n'; // Add newline if not the first team
+      teamsText += "\n"; // Add newline if not the first team
     }
     teamsText += teamText;
   });
@@ -199,17 +257,17 @@ function generateTeamsText(teamsContainer) {
 // Function to download teams as a .txt file
 function downloadTeamsTxt(teamsContainer) {
   const teamsText = generateTeamsText(teamsContainer);
-  const element = document.createElement('a');
-  const file = new Blob([teamsText], {type: 'text/plain'});
+  const element = document.createElement("a");
+  const file = new Blob([teamsText], { type: "text/plain" });
   element.href = URL.createObjectURL(file);
-  element.download = 'teams.txt';
+  element.download = "teams.txt";
   document.body.appendChild(element); // Required for Firefox
   element.click();
   document.body.removeChild(element);
 }
 
 // Event listener for downloading teams as .txt file
-document.getElementById('downloadTeamsButton').addEventListener('click', () => {
-  const teamsContainer = document.getElementById('teamsContainer');
+document.getElementById("downloadTeamsButton").addEventListener("click", () => {
+  const teamsContainer = document.getElementById("teamsContainer");
   downloadTeamsTxt(teamsContainer);
 });
